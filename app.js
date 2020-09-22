@@ -9,8 +9,6 @@ const app = express();
 // Include Sequalize
 const sequalize = require("./helper/database");
 
-
-
 // Routes middleware
 const adminRoutes = require("./routes/adminRoutes");
 const mainRoutes = require("./routes/mainRoutes");
@@ -25,10 +23,41 @@ app.use(adminRoutes);
 app.use(mainRoutes);
 app.use(errorController.get404);
 
+
+
+// Include Models
+const Product = require("./models/product");
+const User = require("./models/users");
+const Cart = require("./models/cart");
+const CarItem = require("./models/cartItem");
+
+
+
+// Relations
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CarItem });
+Product.belongsToMany(Cart, { through: CarItem });
+
 sequalize
-  .sync()
+  .sync({ force: true })
   .then((connectionRezult) => {
-    //console.log("connectionRezult = ", connectionRezult);
+    return User.findByPk(1);
+  })
+  .then((user) => {
+    console.log("user => ", user);
+    if (!user) {
+      return User.create({
+        name: "master",
+        email: "master@example.com",
+        password: "masterpass",
+      });
+    }
+    return user;
+  })
+  .then((user) => {
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => console.log(err));
