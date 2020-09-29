@@ -1,11 +1,7 @@
 const Product = require("../models/product");
-const User = require("../models/users");
 
 // Home page
 exports.getHomePage = (req, res, next) => {
-  User.findAll()
-    .then((responce) => console.log(responce))
-    .catch((err) => console.log(err));
   Product.findAll()
     .then((products) => {
       res.render("pages/home", {
@@ -25,4 +21,32 @@ exports.getContactPage = (req, res, next) => {
 // FAQ page
 exports.getFAQPage = (req, res, next) => {
   res.render("pages/faq");
+};
+
+exports.getProduct = (req, res, next) => {
+  const prodId = req.params.productId;
+  Product.findByPk(prodId)
+    .then((product) => {
+      res.render("pages/product-detail", {
+        product: product,
+        pageTitle: product.title,
+        path: "/products",
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.getCart = (req, res, next) => {
+  console.log("req getCart => ", req.user);
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts().then((products) => {
+        res.render("pages/cart", {
+          path: "/cart",
+          products: products,
+        });
+      });
+    })
+    .catch((err) => console.log(err));
 };
