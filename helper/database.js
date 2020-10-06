@@ -13,7 +13,7 @@ const DATABASENAME = "intershop-alekseevetc";
 
 const sequalize = new Sequalize(DATABASENAME, DBUSERNAME, PASSWORD, {
   dialect: "mysql",
-  host: DBHOST,
+  host: "10.7.101.193",
 });
 
 module.exports = sequalize;
