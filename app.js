@@ -19,8 +19,8 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "static")));
 app.use("/admin", express.static(__dirname + "/static"));
-// app.use("/admin/edit-product", express.static(__dirname + "/static"));
-// app.use("/products", express.static(__dirname + "/static"));
+app.use("/admin/edit-product", express.static(__dirname + "/static"));
+app.use("/products", express.static(__dirname + "/static"));
 
 app.use((req, res, next) => {
   User.findById("5f7c9a32e5fc8528b0bc48b2")
@@ -38,7 +38,7 @@ app.use(errorController.get404);
 
 mongoose
   .connect(
-    "mongodb+srv://admin:bootshop_admin@cluster0.x6bhk.mongodb.net/bootsoop?retryWrites=true&w=majority",
+    "mongodb+srv://alekseevetc:0961234546@cluster0.dum3h.mongodb.net/shop1?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {
